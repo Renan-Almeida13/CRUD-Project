@@ -28,8 +28,8 @@ namespace Data.Repositories.User
         {
             using var connection = new SqlConnection(GetConnection());
             var sql = $@"
-                       INSERT INTO {TABLE} (IdUserRegistration, DateRegistration, Name, LastName, Email, DateOfBirth)
-                       VALUES ({request.UserId}, GETDATE(), '{request.Name}', '{request.LastName}', '{request.Email}', '{request.DateOfBirth}')
+                       INSERT INTO {TABLE} (DateRegistration, Name, LastName, Email, DateOfBirth)
+                       VALUES ( GETDATE(), '{request.Name}', '{request.LastName}', '{request.Email}', '{request.DateOfBirth}')
                        SELECT CAST(SCOPE_IDENTITY() as int)";
 
             var response = connection.Query<int>(sql).First();
@@ -51,7 +51,7 @@ namespace Data.Repositories.User
             }
 
             sql += $@"
-                        AND Email <> {request.Email}";
+                        AND Email <> '{request.Email}'";
 
             var response = connection.Query<UserGetResponse>(sql).Count() > 0 ? true : false;
 

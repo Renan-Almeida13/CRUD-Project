@@ -22,8 +22,6 @@ namespace Domain.Entities.User.Responses
         public string LastName { get; set; }
         public string Email { get; set; }
         public string DateOfBirth { get; set; }
-        public int IdUserRegistration { get; set; }
-        public int? IdUserChange { get; set; }
         public DateTime DateRegistration { get; set; }
         public DateTime? DateChange { get; set; }
     }
