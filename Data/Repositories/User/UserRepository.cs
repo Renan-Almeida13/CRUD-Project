@@ -10,7 +10,7 @@ namespace Data.Repositories.User
 {
     public class UserRepository : MSSQL, IUserRepository
     {
-        private const string TABLE = "User";
+        private const string TABLE = "Users";
 
         public IEnumerable<UserListResponse> List()
         {

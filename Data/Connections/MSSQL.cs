@@ -8,6 +8,6 @@ namespace Data.Connections
 {
     public class MSSQL
     {
-        public static string GetConnection() => Environment.GetEnvironmentVariable("DESKTOP-F2C1P8P");
+        public static string GetConnection() => Environment.GetEnvironmentVariable("");
     }
 }
