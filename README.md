@@ -24,6 +24,7 @@ CQRS (Command Query Responsibility Segregation) pattern
 MediatR
 SQL Server with SQL Server Management Studio (SSMS)
 Dapper
+xUnit with Mock
 
 Contributions
 
