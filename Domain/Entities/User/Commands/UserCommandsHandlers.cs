@@ -33,4 +33,26 @@ namespace Domain.Entities.User.Commands
             return Task.FromResult(new Response(System.Net.HttpStatusCode.OK, null, response));
         }
     }
+    public class EditUserCommandHandler : Handler, IRequestHandler<EditUserCommand, Response>
+    {
+        private readonly IUserRepository _iUserRepository;
+
+        public EditUserCommandHandler(IUserRepository iUserRepository)
+        {
+            _iUserRepository = iUserRepository;
+        }
+
+        public Task<Response> Handle(EditUserCommand request, CancellationToken cancellationToken)
+        {
+            Errors = new UserValidations(_iUserRepository).EditUserValidation(request);
+            if (Errors.Count > 0)
+            {
+                return Task.FromResult(new Response(System.Net.HttpStatusCode.BadRequest, Errors, null));
+            }
+
+            var response = _iUserRepository.Edit(request);
+
+            return Task.FromResult(new Response(System.Net.HttpStatusCode.OK, null, response));
+        }
+    }
 }

@@ -30,5 +30,12 @@ namespace API.Controllers
             var response = await _mediator.Send(request);
             return StatusCode((int)response.StatusCode, response);
         }
+
+        [HttpPut]
+        public async Task<IActionResult> Edit(EditUserCommand request)
+        {
+            var response = await _mediator.Send(request);
+            return StatusCode((int)response.StatusCode, response);
+        }
     }
 }

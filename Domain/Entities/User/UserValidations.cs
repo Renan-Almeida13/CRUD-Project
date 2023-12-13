@@ -21,15 +21,32 @@ namespace Domain.Entities.User
 
         public List<string> AddUserValidation(AddUserCommand request)
         {
-            if (Errors.Count == 0 && _iUserRepository.Exist(new Queries.ExistUserQuery() { Email = request.Email, Id = request.Id })) 
+            List<string> errors = new List<string>();
+
+            if (string.IsNullOrEmpty(request.Email)) 
             {
-                Errors.Add("User already exists.");
+                errors.Add("Please, inform your e-mail.");
             }
 
-            if (string.IsNullOrEmpty(request.Email))
-                Errors.Add("Please, inform your e-mail");
+            if (errors.Count == 0 && _iUserRepository.Exist(new Queries.ExistUserQuery() { Email = request.Email }))
+                errors.Add("User already exists.");
 
-            return Errors;
+            return errors;
+        }
+
+        public List<string> EditUserValidation(EditUserCommand request)
+        {
+            List<string> errors = new List<string>();
+
+            if (string.IsNullOrEmpty(request.Email))
+            {
+                errors.Add("Please, inform your e-mail.");
+            }
+
+            if (errors.Count == 0 && _iUserRepository.Exist(new Queries.ExistUserQuery() { Email = request.Email, Id = request.Id }))
+                errors.Add("User already exists.");
+
+            return errors;
         }
     }
 }

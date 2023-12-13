@@ -13,6 +13,7 @@ namespace Domain.Interfaces.User
     {
         IEnumerable<UserListResponse> List();
         int Add(AddUserCommand request);
+        int Edit(EditUserCommand request);
         bool Exist(ExistUserQuery request);
     }
 }

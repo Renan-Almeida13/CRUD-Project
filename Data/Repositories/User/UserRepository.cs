@@ -37,6 +37,18 @@ namespace Data.Repositories.User
             return response;
         }
 
+        public int Edit(EditUserCommand request)
+        {
+            using var connection = new SqlConnection(GetConnection());
+            var sql = $@"
+                       UPDATE {TABLE} SET Name = '{request.Name}', LastName = '{request.LastName}', Email = '{request.Email}', DateOfBirth = '{request.DateOfBirth}'
+                       WHERE Id = {request.Id}";
+
+            var response = connection.Execute(sql);
+
+            return request.Id;
+        }
+
         public bool Exist(ExistUserQuery request)
         {
             using var connection = new SqlConnection(GetConnection());

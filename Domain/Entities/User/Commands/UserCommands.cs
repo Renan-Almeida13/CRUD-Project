@@ -16,6 +16,14 @@ namespace Domain.Entities.User.Commands
         public string LastName { get; set; }
         public string Email { get; set; }
         public string DateOfBirth { get; set; }
+    }
+
+    public class EditUserCommand : Command, IRequest<Response>
+    {
         public int Id { get; set; }
+        public string Name { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
+        public string DateOfBirth { get; set; }
     }
 }
