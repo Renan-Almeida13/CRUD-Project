@@ -55,4 +55,20 @@ namespace Domain.Entities.User.Commands
             return Task.FromResult(new Response(System.Net.HttpStatusCode.OK, null, response));
         }
     }
+    public class RemoveUserCommandHandler : Handler, IRequestHandler<RemoveUserCommand, Response>
+    {
+        private readonly IUserRepository _iUserRepository;
+
+        public RemoveUserCommandHandler(IUserRepository iUserRepository)
+        {
+            _iUserRepository = iUserRepository;
+        }
+
+        public Task<Response> Handle(RemoveUserCommand request, CancellationToken cancellationToken)
+        {
+            var response = _iUserRepository.Remove(request);
+
+            return Task.FromResult(new Response(System.Net.HttpStatusCode.OK, null, response));
+        }
+    }
 }

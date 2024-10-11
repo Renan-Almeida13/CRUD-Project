@@ -18,21 +18,35 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> List()
+        public async Task<IActionResult> ListAsync()
         {
             var response = await _mediator.Send(new ListUserQuery());
             return StatusCode((int)response.StatusCode, response);
         }
 
+        [HttpGet("GetById")]
+        public async Task<IActionResult> GetByIdAsync(int id)
+        {
+            var response = await _mediator.Send(new GetByIdUserQuery { Id = id });
+            return StatusCode((int)response.StatusCode, response);
+        }
+
         [HttpPost]
-        public async Task<IActionResult> Add(AddUserCommand request)
+        public async Task<IActionResult> AddAsync(AddUserCommand request)
         {
             var response = await _mediator.Send(request);
             return StatusCode((int)response.StatusCode, response);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Edit(EditUserCommand request)
+        public async Task<IActionResult> EditAsync(EditUserCommand request)
+        {
+            var response = await _mediator.Send(request);
+            return StatusCode((int)response.StatusCode, response);
+        }
+
+        [HttpPut("Remove")]
+        public async Task<IActionResult> RemoveAsync(RemoveUserCommand request)
         {
             var response = await _mediator.Send(request);
             return StatusCode((int)response.StatusCode, response);

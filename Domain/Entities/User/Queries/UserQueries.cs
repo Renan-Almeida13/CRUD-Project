@@ -10,6 +10,10 @@ namespace Domain.Entities.User.Queries
 {
     public class UserQueries { }
     public class ListUserQuery : IRequest<Response> { }
+    public class GetByIdUserQuery : IRequest<Response>
+    {
+        public int Id { get; set; }
+    }
     public class ExistUserQuery : IRequest<Response> 
     {
         public int Id { get; set; }

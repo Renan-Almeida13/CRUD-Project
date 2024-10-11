@@ -23,7 +23,7 @@ namespace Domain.Entities.User
         {
             List<string> errors = new List<string>();
 
-            if (string.IsNullOrEmpty(request.Email)) 
+            if (string.IsNullOrEmpty(request.Email))
             {
                 errors.Add("Please, inform your e-mail.");
             }
@@ -43,8 +43,9 @@ namespace Domain.Entities.User
                 errors.Add("Please, inform your e-mail.");
             }
 
+            // Verifica se o email é diferente do existente
             if (errors.Count == 0 && _iUserRepository.Exist(new Queries.ExistUserQuery() { Email = request.Email, Id = request.Id }))
-                errors.Add("User already exists.");
+                errors.Add("User already exists with a different email.");
 
             return errors;
         }

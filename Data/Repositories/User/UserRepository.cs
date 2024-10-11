@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Data.Connections;
+using Domain.Entities.User;
 using Domain.Entities.User.Commands;
 using Domain.Entities.User.Queries;
 using Domain.Entities.User.Responses;
@@ -23,13 +24,24 @@ namespace Data.Repositories.User
 
             return response;
         }
+        public UserGetByIdResponse GetById(int id)
+        {
+            using var connection = new SqlConnection(GetConnection());
+            var sql = $@"SELECT Name, LastName, Email, DateOfBirth
+                         FROM {TABLE}
+                         WHERE DateRemoval IS NULL AND UserId = {id}";
+
+            var response = connection.QuerySingleOrDefault<UserGetByIdResponse>(sql, new { Id = id });
+
+            return response;
+        }
 
         public int Add(AddUserCommand request)
         {
             using var connection = new SqlConnection(GetConnection());
             var sql = $@"
-                       INSERT INTO {TABLE} (DateRegistration, Name, LastName, Email, DateOfBirth)
-                       VALUES ( GETDATE(), '{request.Name}', '{request.LastName}', '{request.Email}', '{request.DateOfBirth}')
+                       INSERT INTO {TABLE} (DateRegistration, Name, LastName, Email, DateOfBirth, ProfileID)
+                       VALUES ( GETDATE(), '{request.Name}', '{request.LastName}', '{request.Email}', '{request.DateOfBirth}', {request.ProfileId})
                        SELECT CAST(SCOPE_IDENTITY() as int)";
 
             var response = connection.Query<int>(sql).First();
@@ -41,8 +53,29 @@ namespace Data.Repositories.User
         {
             using var connection = new SqlConnection(GetConnection());
             var sql = $@"
-                       UPDATE {TABLE} SET Name = '{request.Name}', LastName = '{request.LastName}', Email = '{request.Email}', DateOfBirth = '{request.DateOfBirth}'
-                       WHERE Id = {request.Id}";
+                       UPDATE {TABLE} SET DateChange = GETDATE(), Name = '{request.Name}', LastName = '{request.LastName}', Email = '{request.Email}', DateOfBirth = '{request.DateOfBirth}', ProfileID = {request.ProfileId}";
+
+            if (request.DateRemoval != false)
+            {
+                sql += $@", DateRemoval = GETDATE()";
+            }
+            else
+            {
+                sql += $@", DateRemoval = NULL";
+            }
+
+            sql += $@" WHERE UserId = {request.Id}";
+
+            var response = connection.Execute(sql);
+
+            return request.Id;
+        }
+        public int Remove(RemoveUserCommand request)
+        {
+            using var connection = new SqlConnection(GetConnection());
+            var sql = $@"
+                       UPDATE {TABLE} SET DateRemoval = GETDATE()
+                       WHERE UserId = {request.Id}";
 
             var response = connection.Execute(sql);
 
@@ -52,22 +85,19 @@ namespace Data.Repositories.User
         public bool Exist(ExistUserQuery request)
         {
             using var connection = new SqlConnection(GetConnection());
-            var sql = $@"SELECT *
-                         FROM {TABLE}
-                         WHERE DateRemoval IS NULL";
+            var sql = $@"SELECT COUNT(*)
+                 FROM {TABLE}
+                 WHERE DateRemoval IS NULL 
+                 AND Email = '{request.Email}'";
 
             if (request.Id != 0)
             {
-                sql += $@"
-                        AND Id <> {request.Id}";
+                sql += $@" AND UserId != {request.Id}";
             }
 
-            sql += $@"
-                        AND Email <> '{request.Email}'";
+            var count = connection.ExecuteScalar<int>(sql, new { Email = request.Email, UserId = request.Id });
 
-            var response = connection.Query<UserGetResponse>(sql).Count() > 0 ? true : false;
-
-            return response;
+            return count > 0;
         }
     }
 }

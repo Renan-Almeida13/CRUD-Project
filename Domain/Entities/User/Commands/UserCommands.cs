@@ -16,6 +16,7 @@ namespace Domain.Entities.User.Commands
         public string LastName { get; set; }
         public string Email { get; set; }
         public string DateOfBirth { get; set; }
+        public int ProfileId { get; set; }
     }
 
     public class EditUserCommand : Command, IRequest<Response>
@@ -25,5 +26,12 @@ namespace Domain.Entities.User.Commands
         public string LastName { get; set; }
         public string Email { get; set; }
         public string DateOfBirth { get; set; }
+        public int ProfileId { get; set; }
+        public bool DateRemoval { get; set; }
+    }
+
+    public class RemoveUserCommand : Command, IRequest<Response>
+    {
+        public int Id { get; set; }
     }
 }

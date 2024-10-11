@@ -1,4 +1,5 @@
 ﻿using Domain.Commons;
+using Domain.Entities.User.Responses;
 using Domain.Interfaces.User;
 using MediatR;
 using System;
@@ -23,6 +24,22 @@ namespace Domain.Entities.User.Queries
         public Task<Response> Handle(ListUserQuery request, CancellationToken cancellationToken)
         {
             var response = _iUserRepository.List();
+
+            return Task.FromResult(new Response(System.Net.HttpStatusCode.OK, null, response));
+        }
+    }
+    public class GetByIdUserQueryHandler : IRequestHandler<GetByIdUserQuery, Response>
+    {
+        private readonly IUserRepository _userRepository;
+
+        public GetByIdUserQueryHandler(IUserRepository userRepository)
+        {
+            _userRepository = userRepository;
+        }
+
+        public Task<Response> Handle(GetByIdUserQuery request, CancellationToken cancellationToken)
+        {
+            var response =  _userRepository.GetById(request.Id);
 
             return Task.FromResult(new Response(System.Net.HttpStatusCode.OK, null, response));
         }
