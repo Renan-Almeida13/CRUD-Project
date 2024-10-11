@@ -1,5 +1,4 @@
 ﻿using IoC;
-using Microsoft.AspNetCore.Builder;
 
 namespace API
 {

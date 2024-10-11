@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Entities.User.Responses
+﻿namespace Domain.Entities.User.Responses
 {
     public class UserResponses { }
     public class UserListResponse

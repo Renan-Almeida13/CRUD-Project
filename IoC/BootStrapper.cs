@@ -1,16 +1,13 @@
 ﻿using Data;
+using Data.Repositories.ProfileType;
 using Data.Repositories.User;
 using Domain;
 using Domain.Entities.Enumx;
+using Domain.Interfaces.ProfileType;
 using Domain.Interfaces.User;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IoC
 {
@@ -38,6 +35,7 @@ namespace IoC
             });
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IProfileTypeRepository, ProfileTypeRepository>();
         }
     }
 }

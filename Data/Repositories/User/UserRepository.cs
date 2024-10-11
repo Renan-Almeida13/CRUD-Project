@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using Data.Connections;
-using Domain.Entities.User;
 using Domain.Entities.User.Commands;
 using Domain.Entities.User.Queries;
 using Domain.Entities.User.Responses;

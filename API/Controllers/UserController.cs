@@ -1,7 +1,6 @@
 ﻿using Domain.Entities.User.Commands;
 using Domain.Entities.User.Queries;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
