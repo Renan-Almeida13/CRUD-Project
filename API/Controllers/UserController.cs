@@ -1,110 +1,64 @@
-﻿using Domain.Entities.User.Commands;
+﻿using Domain.Commons;
+using Domain.Entities.User.Commands;
 using Domain.Entities.User.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace API.Controllers
+[ApiController]
+[Route("api/[controller]")]
+public class UserController : ControllerBase
 {
-    [Route("api/user")]
-    [ApiController]
-    public class UserController : ControllerBase
+    private readonly IMediator _mediator;
+
+    public UserController(IMediator mediator)
     {
-        private readonly IMediator _mediator;
+        _mediator = mediator;
+    }
 
-        public UserController(IMediator mediator)
+    [HttpGet]
+    public async Task<IActionResult> ListAsync()
+    {
+        var response = await _mediator.Send(new ListUserQuery());
+        return HandleResponse(response);
+    }
+
+    [HttpGet("GetById")]
+    public async Task<IActionResult> GetByIdAsync(int id)
+    {
+        var response = await _mediator.Send(new GetByIdUserQuery { Id = id });
+        return HandleResponse(response);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddAsync([FromBody] AddUserCommand request)
+    {
+        var response = await _mediator.Send(request);
+        return HandleResponse(response);
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> EditAsync([FromBody] EditUserCommand request)
+    {
+        var response = await _mediator.Send(request);
+        return HandleResponse(response);
+    }
+
+    [HttpPut("Remove")]
+    public async Task<IActionResult> RemoveAsync([FromBody] RemoveUserCommand request)
+    {
+        var response = await _mediator.Send(request);
+        return HandleResponse(response);
+    }
+
+    private IActionResult HandleResponse(Response response)
+    {
+        return response.StatusCode switch
         {
-            _mediator = mediator;
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> ListAsync()
-        {
-            var response = await _mediator.Send(new ListUserQuery());
-
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                return Ok(response.Data);
-            }
-
-            if (response.StatusCode == HttpStatusCode.NotFound)
-            {
-                return NotFound(response.Errors);
-            }
-
-            return StatusCode((int)response.StatusCode, response.Errors);
-        }
-
-        [HttpGet("GetById")]
-        public async Task<IActionResult> GetByIdAsync(int id)
-        {
-            var response = await _mediator.Send(new GetByIdUserQuery { Id = id });
-
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                return Ok(response.Data);
-            }
-
-            if (response.StatusCode == HttpStatusCode.NotFound)
-            {
-                return NotFound(response.Errors);
-            }
-
-            return StatusCode((int)response.StatusCode, response.Errors);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddAsync(AddUserCommand request)
-        {
-            var response = await _mediator.Send(request);
-
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                return Ok(response.Data);
-            }
-
-            if (response.StatusCode == HttpStatusCode.BadRequest)
-            {
-                return BadRequest(response.Errors);
-            }
-
-            return StatusCode((int)response.StatusCode, response.Errors);
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> EditAsync(EditUserCommand request)
-        {
-            var response = await _mediator.Send(request);
-
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                return Ok(response.Data);
-            }
-
-            if (response.StatusCode == HttpStatusCode.NotFound)
-            {
-                return NotFound(response.Errors);
-            }
-
-            return StatusCode((int)response.StatusCode, response.Errors);
-        }
-
-        [HttpPut("Remove")]
-        public async Task<IActionResult> RemoveAsync(RemoveUserCommand request)
-        {
-            var response = await _mediator.Send(request);
-
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                return Ok(response.Data);
-            }
-
-            if (response.StatusCode == HttpStatusCode.NotFound)
-            {
-                return NotFound(response.Errors);
-            }
-
-            return StatusCode((int)response.StatusCode, response.Errors);
-        }
+            HttpStatusCode.OK => Ok(response.Data),
+            HttpStatusCode.NotFound => NotFound(response.Errors),
+            HttpStatusCode.BadRequest => BadRequest(response.Errors),
+            _ => StatusCode((int)response.StatusCode, response.Errors)
+        };
     }
 }
